@@ -48,19 +48,19 @@ custom:
 
 functions:
   custom-authorizer:
-    handler: src/authorizer/index.handler
+    handler: src/modules/authorizer/index.handler
     package:
       patterns:
-        - "src/authorizer/index.js"
+        - "src/modules/authorizer/index.js"
 
   create-songs:
-    handler: src/songs/create/index.handler
+    handler: src/modules/songs/create/index.handler
     package:
       patterns:
-        - "src/songs/create/index.js"
+        - "src/modules/songs/create/index.js"
     events:
       - http:
-          path: songs
+          path: /api/v1/songs
           # authorizer:
           #   name: custom-authorizer
           #   resultTtlInSeconds: 15
