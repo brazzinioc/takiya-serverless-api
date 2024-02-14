@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Song",
+    "type": "object",
+    "required": [
+        "title",
+        "spanishLyrics",
+        "quechuaLyrics",
+        "artist",
+        "genre",
+        "links"
+    ],
+    "properties": {
+        "title": {
+            "type": "string",
+            "description": "The title of the song."
+        },
+        "spanishLyrics": {
+            "type": "string",
+            "description": "The lyrics of the song in Spanish."
+        },
+        "quechuaLyrics": {
+            "type": "string",
+            "description": "The lyrics of the song in Quechua."
+        },
+        "artist": {
+            "type": "string",
+            "description": "The artist of the song."
+        },
+        "genre": {
+            "type": "string",
+            "description": "The genre of the song."
+        },
+        "links": {
+            "type": "array",
+            "description": "Links to the song.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "url",
+                    "platform"
+                ],
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "description": "The URL to the song."
+                    },
+                    "platform": {
+                        "type": "string",
+                        "description": "The platform of URL."
+                    }
+                }
+            }
+        }
+    }
+}

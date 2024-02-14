@@ -1,0 +1,86 @@
+service: takiya-api-backend
+app: takiya-api
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: "dynamodb:*"
+          Resource: { "Fn::GetAtt": ["songsTable", "Arn"] }
+        - Effect: Allow
+          Action: "s3:*"
+          Resource:
+            { "Fn::Join": ["", [{ "Fn::GetAtt": ["S3Bucket", "Arn"] }, "/*"]] }
+  environment:
+    BUCKET_NAME: takiya-app-songs
+    SONGS_TABLE_NAME: songsTable
+
+plugins:
+  - serverless-offline
+  - serverless-apigateway-service-proxy
+  - serverless-lift
+  - serverless-dynamodb
+
+package:
+  individually: true
+  patterns:
+    - "!*/**" # Exclude all files
+    - "!**"
+
+custom:
+  dynamodb:
+    # If you only want to use DynamoDB Local in some stages, declare them here
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+
+functions:
+  custom-authorizer:
+    handler: src/authorizer/index.handler
+    package:
+      patterns:
+        - "src/authorizer/index.js"
+
+  create-songs:
+    handler: src/songs/create/index.handler
+    package:
+      patterns:
+        - "src/songs/create/index.js"
+    events:
+      - http:
+          path: songs
+          # authorizer:
+          #   name: custom-authorizer
+          #   resultTtlInSeconds: 15
+          method: POST
+          request:
+            schemas:
+              application/json: ${file(src/schemas/create-song.json)}
+
+resources:
+  Resources:
+    songsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.SONGS_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

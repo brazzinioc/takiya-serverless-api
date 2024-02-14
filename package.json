@@ -1,0 +1,23 @@
+{
+  "name": "takiya-api",
+  "version": "1.0.0",
+  "description": "serverless takiya api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "chunkapps",
+  "type": "module",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-apigateway-service-proxy": "^2.2.1",
+    "serverless-lift": "^1.28.1",
+    "serverless-offline": "^13.3.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.511.0",
+    "serverless-dynamodb": "^0.2.47"
+  }
+}
